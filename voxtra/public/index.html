@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>VoXtra - Создай свою музыку</title>
+        <link rel="stylesheet" href="/static/style.css" />
+    </head>
+    <body>
+        <!-- Главная страница -->
+        <div id="homePage" class="page active">
+            <div class="hero-section">
+                <div class="logo">
+                    <h1>VoXtra</h1>
+                    <p class="tagline">Твой код, твой звук, твой трек</p>
+                </div>
+
+                <button id="createProjectBtn" class="create-btn">
+                    <span class="plus">+</span>
+                    <span>Создать новый проект</span>
+                </button>
+
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>
+                            <img
+                                src="/static/gitarre.png"
+                                alt="Гитара"
+                            />Гитара
+                        </h3>
+                        <p>Создай жесткую гитарную партию</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>
+                            <img
+                                src="/static/snare_2.png"
+                                alt="Инструмент"
+                            />Барабаны
+                        </h3>
+                        <p>Напиши ритмичную основу</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>
+                            <img
+                                src="/static/mic.png"
+                                alt="Вокал"
+                            />Вокал
+                        </h3>
+                        <p>Создай наидеальнейший вокал</p>
+                    </div>
+                </div>
+                <!-- Добавь этот блок после .features -->
+                <div class="hero-actions">
+                    <button
+                        id="libraryBtn"
+                        class="secondary-btn"
+                        style="margin-top: 2rem"
+                    >
+                        📚 Мои проекты
+                    </button>
+                    <button
+                        id="statsBtn"
+                        class="secondary-btn"
+                        style="margin-top: 1rem"
+                    >
+                        📊 Статистика
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница выбора типа партии -->
+        <div id="trackTypePage" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="showPage('homePage')">
+                    ← Назад
+                </button>
+                <h2>Выбери тип партии</h2>
+            </div>
+
+            <div class="track-types">
+                <div class="track-type-card" data-type="drums">
+                    <div class="icon">🥁</div>
+                    <h3>Барабанная партия</h3>
+                    <p>Создай ритмичную основу для трека</p>
+                </div>
+
+                <div class="track-type-card" data-type="vocal">
+                    <div class="icon">🎤</div>
+                    <h3>Вокальная партия</h3>
+                    <p>Напиши или опиши вокальную мелодию</p>
+                </div>
+
+                <div class="track-type-card" data-type="guitar">
+                    <div class="icon">🎸</div>
+                    <h3>Гитарная партия</h3>
+                    <p>Создай рифф или аккомпанемент</p>
+                </div>
+
+                <div class="track-type-card" data-type="bass">
+                    <div class="icon">🎸</div>
+                    <h3>Бас-партия</h3>
+                    <p>Добавь низкочастотную основу</p>
+                </div>
+
+                <div class="track-type-card" data-type="keyboard part">
+                    <div class="icon">🎹</div>
+                    <h3>Клавишные</h3>
+                    <p>Создай аккорды или мелодию</p>
+                </div>
+
+                <div class="track-type-card" data-type="strings">
+                    <div class="icon">🎻</div>
+                    <h3>Струнные</h3>
+                    <p>Добавь оркестровые элементы</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница ввода промпта -->
+        <div id="promptPage" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="showPage('trackTypePage')">
+                    ← Назад
+                </button>
+                <h2 id="promptTitle">Опиши свою партию</h2>
+            </div>
+
+            <div class="prompt-container">
+                <div class="selected-track">
+                    <span id="selectedTrackIcon">🥁</span>
+                    <span id="selectedTrackName">Барабанная партия</span>
+                </div>
+
+                <div class="prompt-examples">
+                    <h4>Примеры хороших описаний:</h4>
+                    <div class="example" onclick="fillPrompt(this)">
+                        "Быстрая рок-барабанная партия с мощной бочкой и хэтом
+                        на каждую четверть"
+                    </div>
+                    <div class="example" onclick="fillPrompt(this)">
+                        "Мелодичный вокал в стиле поп-музыки, эмоциональный
+                        припев"
+                    </div>
+                    <div class="example" onclick="fillPrompt(this)">
+                        "Фанковый бас-рифф с слайдами и синкопами"
+                    </div>
+                </div>
+
+                <textarea
+                    id="promptInput"
+                    placeholder="Опиши подробно, какую партию ты хочешь создать. Чем детальнее описание, тем лучше результат!"
+                    rows="8"
+                ></textarea>
+
+                <div class="style-options">
+                    <h4>Дополнительные настройки:</h4>
+                    <div class="style-grid">
+                        <select id="genreSelect">
+                            <option value="">Выбери жанр</option>
+                            <option value="rock">Рок</option>
+                            <option value="pop">Поп</option>
+                            <option value="jazz">Джаз</option>
+                            <option value="electronic">Электроника</option>
+                            <option value="hiphop">Хип-хоп</option>
+                            <option value="classical">Классика</option>
+                        </select>
+
+                        <select id="moodSelect">
+                            <option value="">Настроение</option>
+                            <option value="happy">Веселое</option>
+                            <option value="energetic">Энергичное</option>
+                            <option value="calm">Спокойное</option>
+                            <option value="sad">Грустное</option>
+                            <option value="epic">Эпическое</option>
+                        </select>
+
+                        <select id="tempoSelect">
+                            <option value="">Темп</option>
+                            <option value="slow">Медленный (60-90 BPM)</option>
+                            <option value="medium">Средний (90-120 BPM)</option>
+                            <option value="fast">Быстрый (120-150 BPM)</option>
+                            <option value="very-fast">
+                                Очень быстрый (150+ BPM)
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="generateTrackBtn" class="generate-btn">
+                    🎵 Создать партию
+                </button>
+            </div>
+        </div>
+
+        <!-- Страница результата -->
+        <div id="resultPage" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="showPage('promptPage')">
+                    ← Назад
+                </button>
+                <h2>Твоя партия готова!</h2>
+            </div>
+
+            <div class="result-container">
+                <div class="track-preview">
+                    <div class="track-info">
+                        <span id="resultTrackIcon">🥁</span>
+                        <div>
+                            <h3 id="resultTrackName">Барабанная партия</h3>
+                            <p id="resultTrackDescription">
+                                Рок-барабанная партия с мощной бочкой
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="audio-player">
+                        <audio id="resultAudio" controls></audio>
+                        <div class="player-controls">
+                            <button id="downloadBtn" class="secondary-btn">
+                                📥 Скачать
+                            </button>
+                            <button id="newProjectBtn" class="secondary-btn">
+                                🔄 Новая партия
+                            </button>
+                            <button id="saveProjectBtn" class="primary-btn">
+                                💾 Сохранить проект
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Добавь этот блок после существующих настроек -->
+                    <div class="advanced-settings">
+                        <h4>⚙️ Продвинутые настройки</h4>
+
+                        <div class="advanced-grid">
+                            <div class="control-group">
+                                <label
+                                    >Длительность:
+                                    <span id="durationValue">30</span>
+                                    сек</label
+                                >
+                                <input
+                                    type="range"
+                                    id="durationSlider"
+                                    min="10"
+                                    max="60"
+                                    value="30"
+                                />
+                            </div>
+
+                            <div class="control-group">
+                                <label
+                                    >Творчество:
+                                    <span id="creativityValue">0.7</span></label
+                                >
+                                <input
+                                    type="range"
+                                    id="creativitySlider"
+                                    min="0.1"
+                                    max="1.0"
+                                    step="0.1"
+                                    value="0.7"
+                                />
+                            </div>
+
+                            <div class="control-group">
+                                <label>Качество:</label>
+                                <select id="qualitySelect">
+                                    <option value="small">
+                                        Быстрое (small)
+                                    </option>
+                                    <option value="medium">
+                                        Сбалансированное (medium)
+                                    </option>
+                                    <option value="large">
+                                        Высокое (large)
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="suggestions">
+                    <h4>Что дальше?</h4>
+                    <div class="suggestion-cards">
+                        <div
+                            class="suggestion-card"
+                            onclick="showPage('trackTypePage')"
+                        >
+                            <h5>➕ Добавить еще партию</h5>
+                            <p>Создай гитарный рифф или вокальную мелодию</p>
+                        </div>
+                        <div class="suggestion-card">
+                            <h5>🎚️ Свести трек</h5>
+                            <p>Настроить громкость и эффекты</p>
+                        </div>
+                        <div class="suggestion-card">
+                            <h5>📊 Проанализировать</h5>
+                            <p>Посмотреть ноты и аккорды</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Страница библиотеки проектов -->
+        <div id="libraryPage" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="showPage('homePage')">
+                    ← Назад
+                </button>
+                <h2>📚 Мои проекты</h2>
+            </div>
+
+            <div class="library-container">
+                <div class="library-stats">
+                    <div class="stat-card">
+                        <h3 id="totalProjects">0</h3>
+                        <p>Всего проектов</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="recentProjects">0</h3>
+                        <p>За последнюю неделю</p>
+                    </div>
+                </div>
+
+                <div id="projectsGrid">
+                    <!-- Проекты будут добавляться здесь автоматически -->
+                </div>
+
+                <div id="emptyLibrary" class="empty-library">
+                    <div class="empty-icon">🎵</div>
+                    <h3>Пока здесь пусто</h3>
+                    <p>Создай свой первый музыкальный проект!</p>
+                    <button
+                        class="primary-btn"
+                        onclick="showPage('trackTypePage')"
+                    >
+                        🎹 Создать первый проект
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Добавь после библиотеки -->
+        <div id="statsPage" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="showPage('homePage')">
+                    ← Назад
+                </button>
+                <h2>📊 Статистика</h2>
+            </div>
+
+            <div class="stats-container">
+                <div class="stats-grid">
+                    <div class="stat-card large">
+                        <h3>📈 Общая статистика</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">Всего проектов:</span>
+                            <span class="stat-value" id="statTotalProjects"
+                                >0</span
+                            >
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Всего генераций:</span>
+                            <span class="stat-value" id="statTotalGenerations"
+                                >0</span
+                            >
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label"
+                                >Общее время использования:</span
+                            >
+                            <span class="stat-value" id="statUsageTime"
+                                >0 минут</span
+                            >
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>🎵 Любимый инструмент</h3>
+                        <div class="stat-icon" id="statFavoriteIcon">🥁</div>
+                        <div
+                            class="stat-value-large"
+                            id="statFavoriteInstrument"
+                        >
+                            Барабаны
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>🎭 Популярный жанр</h3>
+                        <div class="stat-value-large" id="statPopularGenre">
+                            Рок
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-actions">
+                    <button
+                        class="secondary-btn"
+                        onclick="voxTraApp.exportStats()"
+                    >
+                        📤 Экспорт статистики
+                    </button>
+                    <button
+                        class="secondary-btn"
+                        onclick="voxTraApp.clearStats()"
+                    >
+                        🗑️ Очистить статистику
+                    </button>
+                </div>
+            </div>
+        </div>
+        <script src="/static/script.js"></script>
+    </body>
+</html>
